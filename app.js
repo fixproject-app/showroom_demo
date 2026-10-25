@@ -189,6 +189,16 @@ function formSheet(judul, fields, onSubmit, opsi) {
 
 // ── Penyimpanan (Storage) ──
 const urlPublik = (path, v) => path ? `${CFG.SUPABASE_URL}/storage/v1/object/public/motor-foto-publik/${path.split('/').map(encodeURIComponent).join('/')}${v ? '?v=' + v : ''}` : '';
+// Favicon & ikon layar utama mengikuti logo showroom (Pengaturan → Katalog). Tanpa logo → ikon bawaan index.html.
+const FAV_AWAL = (() => { const l = document.querySelector('link[rel="icon"]'); return l ? l.getAttribute('href') : ''; })();
+function terapkanFavicon(u) {
+  try {
+    const logo = u && u.logo ? urlPublik(u.logo) : '';
+    document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach((e) => e.remove());
+    const baru = document.createElement('link'); baru.rel = 'icon'; baru.href = logo || FAV_AWAL; document.head.appendChild(baru);
+    if (logo) { const a = document.createElement('link'); a.rel = 'apple-touch-icon'; a.href = logo; document.head.appendChild(a); }
+  } catch (e) { /* favicon bukan fitur kritis */ }
+}
 const _signed = {};
 async function urlTertanda(bucket, path) {
   const k = bucket + '/' + path, c = _signed[k];
@@ -413,7 +423,7 @@ async function halKatalog() {
   const d = await q(sb.rpc('rpc_katalog_publik'));
   if (!$('#k-list')) return;   // pengguna sudah pindah halaman
   if (!d) { $('#k-list').innerHTML = kosong('cloud_off', 'Katalog belum dapat dimuat. Coba lagi nanti.'); return; }
-  S.usaha = d.usaha; $('#pub-nama').textContent = d.usaha.nama_usaha; document.title = d.usaha.nama_usaha; $('#pub-logo').innerHTML = logoUsaha(d.usaha); $('#k-foot').innerHTML = footerPublik(d.usaha);
+  S.usaha = d.usaha; terapkanFavicon(d.usaha); $('#pub-nama').textContent = d.usaha.nama_usaha; document.title = d.usaha.nama_usaha; $('#pub-logo').innerHTML = logoUsaha(d.usaha); $('#k-foot').innerHTML = footerPublik(d.usaha);
   $('#k-hero').innerHTML = heroHtml(d.usaha); pasangSlider($('#k-hero')); putarHero();
   const semua = d.motor || []; let merk = 'Semua';
   const merkList = ['Semua', ...Array.from(new Set(semua.map((m) => m.merk))).sort()];
@@ -1208,12 +1218,12 @@ function pasangKartuKatalog(cfg) {
     await sibuk($('#lg-up'), async () => {
       const path = await unggahTampilan('logo', f, true); if (!path) return;
       if (!(await tulis(sb.from('pengaturan').upsert([{ key: 'logo_path', value: path }], { onConflict: 'key' }), 'Logo disimpan.'))) { hapusFilePublik(path); return; }
-      hapusFilePublik(cfg.logo_path); halPengaturan();
+      hapusFilePublik(cfg.logo_path); if (S.usaha) S.usaha.logo = path; terapkanFavicon(S.usaha); halPengaturan();
     });
   };
   const ld = $('#lg-del'); if (ld) ld.onclick = async () => {
     if (!(await konfirmasi('Hapus logo?', 'Logo diganti ikon motor bawaan.', 'Hapus', true))) return;
-    if (await tulis(sb.from('pengaturan').upsert([{ key: 'logo_path', value: '' }], { onConflict: 'key' }), 'Logo dihapus.')) { hapusFilePublik(cfg.logo_path); halPengaturan(); }
+    if (await tulis(sb.from('pengaturan').upsert([{ key: 'logo_path', value: '' }], { onConflict: 'key' }), 'Logo dihapus.')) { hapusFilePublik(cfg.logo_path); if (S.usaha) S.usaha.logo = ''; terapkanFavicon(S.usaha); halPengaturan(); }
   };
   const formBanner = (idx) => {
     const b = idx == null ? {} : list[idx]; let berkas = null, lepas = false;
@@ -1304,11 +1314,11 @@ async function route() {
     // Halaman publik
     if (!a) return await halKatalog();
     if (a === 'motor' && seg[1]) return await halDetailPublik(seg[1]);
-    if (a === 'masuk') { if (S.profile) { location.hash = rumah(); return; } if (!S.usaha) { const u = await q(sb.rpc('rpc_publik_config'), { senyap: true }); if (u) S.usaha = u; if (rid !== _rid) return; } return halLogin(); }
+    if (a === 'masuk') { if (S.profile) { location.hash = rumah(); return; } if (!S.usaha) { const u = await q(sb.rpc('rpc_publik_config'), { senyap: true }); if (u) { S.usaha = u; terapkanFavicon(u); } if (rid !== _rid) return; } return halLogin(); }
     // Halaman terautentikasi
     if (!S.profile) { await muatProfil(); if (rid !== _rid) return; }
     if (!S.profile) { location.hash = '#/masuk'; return; }
-    if (!S.usaha) { const u = await q(sb.rpc('rpc_publik_config'), { senyap: true }); if (u) S.usaha = u; }
+    if (!S.usaha) { const u = await q(sb.rpc('rpc_publik_config'), { senyap: true }); if (u) { S.usaha = u; terapkanFavicon(u); } }
     if (rid !== _rid) return;
     if (!isOwner() && !HAL_ADMIN.includes(a)) { location.hash = rumah(); return; }
     switch (a) {
