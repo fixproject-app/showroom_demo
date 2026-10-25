@@ -10,7 +10,7 @@ window.APP_CONFIG = {
   SUPABASE_ANON_KEY: 'sb_publishable_-rAi2ur3lfy3a9sJpHhLRw_r1PSpVwB',
 
   // Alamat situs setelah di-deploy (tanpa garis miring di akhir), dipakai untuk tautan bagikan.
-  SITE_URL: 'https://GANTI-DENGAN-DOMAIN-ANDA.vercel.app',
+  SITE_URL: 'showroomdemo-one.vercel.app',
 
   // true  → tautan bagikan berbentuk  https://domain/motor/<slug>   (pratinjau WhatsApp ada foto & harga;
   //         butuh api/motor.js + vercel.json dari paket ini → hosting Vercel)
