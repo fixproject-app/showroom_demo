@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Showroom Motor — Katalog Motor Bekas</title>
+  <meta name="description" content="Katalog motor bekas siap jual." />
+  <meta name="theme-color" content="#14284B" />
+  <meta property="og:title" content="Showroom Motor" />
+  <meta property="og:description" content="Katalog motor bekas siap jual." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314284B'/%3E%3Cpath d='M14 40h36M22 40l6-14h10l6 14' stroke='%23F97316' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=1" />
+  <script>
+    // Terapkan tema sebelum render agar tidak berkedip
+    (function () {
+      try {
+        var p = localStorage.getItem('app_tema') || 'auto';
+        var dark = p === 'dark' || (p === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div id="app"><div class="boot"><div class="spinner"></div></div></div>
+  <div id="sheet-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+
+  <noscript>Aplikasi ini membutuhkan JavaScript.</noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
