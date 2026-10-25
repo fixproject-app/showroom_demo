@@ -480,11 +480,12 @@ async function halDetailPublik(slug) {
 
 // ── Login ──
 function halLogin() {
-  app().innerHTML = `<div class="login"><div class="box"><div class="center mb"><div class="logo">${ic('two_wheeler', 'lg')}</div><h1>${esc((S.usaha && S.usaha.nama_usaha) || 'Showroom Motor')}</h1><p class="muted small" style="margin:4px 0 0">Masuk untuk mengelola showroom</p></div>
+  app().innerHTML = `<div class="login"><div class="box"><div class="center mb">${S.usaha && S.usaha.logo ? `<img class="logo-img" src="${esc(urlPublik(S.usaha.logo))}" alt="Logo ${esc(S.usaha.nama_usaha)}">` : `<div class="logo">${ic('two_wheeler', 'lg')}</div>`}<h1>${esc((S.usaha && S.usaha.nama_usaha) || 'Showroom Motor')}</h1><p class="muted small" style="margin:4px 0 0">Masuk untuk mengelola showroom</p></div>
     <form class="card stack" id="f-login" novalidate><div class="field"><label for="l-email">Email</label><input id="l-email" type="email" autocomplete="username" inputmode="email" required></div>
     <div class="field"><label for="l-pass">Kata sandi</label><div class="row"><input id="l-pass" type="password" autocomplete="current-password" required><button type="button" class="icon-btn" id="l-eye" aria-label="Tampilkan kata sandi">${ic('visibility')}</button></div></div>
     <div class="alert bad hidden" id="l-err" role="alert"></div><button class="btn accent block" type="submit">Masuk</button></form>
-    <p class="center small mt"><a href="#/">← Kembali ke katalog</a></p></div></div>`;
+    <p class="center small mt"><a href="#/">← Kembali ke katalog</a></p>
+    <p class="center xs muted" style="margin-top:18px">© ${new Date().getFullYear()} Fix Project Developer</p></div></div>`;
   $('#l-eye').onclick = () => { const i = $('#l-pass'); i.type = i.type === 'password' ? 'text' : 'password'; };
   $('#f-login').onsubmit = async (e) => {
     e.preventDefault();
